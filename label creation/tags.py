@@ -1,4 +1,11 @@
 import spacy
+
+#needed for data preproccessing
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 nlp = spacy.load("en_core_web_sm")
 
 
@@ -10,3 +17,6 @@ class Tags:
     def get_tokens(self):
         for token in self.doc:
             print(token.text)
+
+
+
