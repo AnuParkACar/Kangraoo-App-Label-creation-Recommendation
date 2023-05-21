@@ -4,7 +4,7 @@ import os
 import tempfile
 import moviepy.editor as mp
 import whisper
-
+import math
 
 class VideoToTranscript:
 
@@ -34,26 +34,35 @@ class VideoToTranscript:
         # take the name only, without the extension ".mp4"
         file_name = os.path.splitext(self.file_name)[0]
         self.audio_file = f"{file_name}.mp3"  # create a new file .mp3
-        video = mp.VideoFileClip(rf"{self.file_name}")
-        video.audio.write_audiofile(rf"{self.audio_file}")
+        self.video = mp.VideoFileClip(rf"{self.file_name}")
+        self.video.audio.write_audiofile(rf"{self.audio_file}")
 
     def mp3_to_text(self):
+        numEpochs = math.ceil(self.video.duration / 30)
         model = whisper.load_model("base")
         # base.en is just one of the sizes ot the models available, full list listed by whisper.available_models()
-        audio = whisper.load_audio(
-            self.audio_file)
-        audio = whisper.pad_or_trim(audio)
+        #audio = whisper.load_audio(
+            #self.audio_file)
+        #audio = whisper.pad_or_trim(audio)
 
         # make log-Mel spectrogram and move to the same device as the model
-        mel = whisper.log_mel_spectrogram(audio).to(model.device)
+        #mel = whisper.log_mel_spectrogram(audio).to(model.device)
 
         # # detect the spoken language
         # _, probs = model.detect_language(mel)
         # print(f"Detected language: {max(probs, key=probs.get)}")
 
         # decode the audio
-        options = whisper.DecodingOptions(fp16=False)
-        self.transcript = whisper.decode(model, mel, options)
+        #options = whisper.DecodingOptions(fp16=False)
+        #self.transcript = whisper.decode(model, mel, options)
+        transcriptions = []
+        for i in range(numEpochs - 1):
+            transcriptions.append(model.transcribe(self.audio_file))
+        self.transcript = " ".join(transcriptions)
 
     def get_transcript(self):
+        textPath = os.path.join(os.path.splitext(self.file_name)[0],".txt")
+        textFile = open(textPath,"w")
+        textFile.write(self.transcript.text)
+        textFile.close()
         return self.transcript.text

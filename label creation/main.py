@@ -3,13 +3,26 @@ from videoToTranscript import VideoToTranscript
 import os
 
 #download, convert, and transcribe .mp4 file
-vtt = VideoToTranscript(
-     "https://s3.amazonaws.com/storage.post.kangaroostar.com/1683201969.mp4")
-vtt.download_file()
-vtt.mp4_to_mp3()
-vtt.mp3_to_text()
-text = vtt.get_transcript()
-print(text)
+#vtt = VideoToTranscript(
+#     "https://s3.amazonaws.com/storage.post.kangaroostar.com/1683201969.mp4")
+#vtt.download_file()
+#vtt.mp4_to_mp3()
+#vtt.mp3_to_text()
+#text = vtt.get_transcript()
+#print(text)
+
+
+def createTranscript(link : str):
+    vtt = VideoToTranscript(link)
+    vtt.download_file()
+    vtt.mp4_to_mp3()
+    vtt.mp3_to_text()
+    text = vtt.get_transcript()
+    print(text)
+
+createTranscript('https://s3.amazonaws.com/storage.post.kangaroostar.com/171B5F9F-3DAE-40F3-8B0E-9030AE8C6356.mp4')
+
+
 # # create and write to text file
 # file_name = vtt.print_audio_name()
 # file_name = os.path.splitext(file_name)[0]
