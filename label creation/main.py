@@ -20,7 +20,7 @@ def createTranscript(link : str):
     text = vtt.get_transcript()
     print(text)
 
-createTranscript('https://s3.amazonaws.com/storage.post.kangaroostar.com/171B5F9F-3DAE-40F3-8B0E-9030AE8C6356.mp4')
+createTranscript('https://s3.amazonaws.com/storage.post.kangaroostar.com/21B8DFF1-FCDA-4DAC-AC13-4BE5530F4E1E.mp4')
 
 
 # # create and write to text file

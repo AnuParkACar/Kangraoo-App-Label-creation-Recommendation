@@ -56,8 +56,10 @@ class VideoToTranscript:
         #options = whisper.DecodingOptions(fp16=False)
         #self.transcript = whisper.decode(model, mel, options)
         transcriptions = []
-        for i in range(numEpochs - 1):
+        i = 0
+        while i < numEpochs:
             transcriptions.append(model.transcribe(self.audio_file)["text"])
+            i+=1
         self.transcript = " ".join(transcriptions)
 
     def get_transcript(self):
