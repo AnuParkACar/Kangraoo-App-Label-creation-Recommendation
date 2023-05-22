@@ -36,10 +36,9 @@ def createLabels(inputLabel:list[str])->str:
 def removeSpace(string:str)->str:
     string = re.sub("[[]|[]]","",string)
     return re.sub("(?<=,)\s","",string)
-print(createLabels(["In-person only", "Full time", "Part time", "Building with hands", "Environment", "Health / Wellness", "Creative / Innovative", "Detail-oriented", "Discreet", "Friendly / Personable", "Multilingual", "Presentation creation", "Research", "Social Media"] 
-))
-#remove stop words, tokenize, and then vectorize the data
 
+#remove stop words, tokenize, and then vectorize the data
+print(createLabels(["In-person only", "Full time", "Hospitality", "Meeting new people", "Service-oriented activities", "Collaborative", "Conflict management", "Detail-oriented", "Friendly / Personable", "Verbal communication", "Written communication", "Organized", "Conflict management"]))
 
 
 #create the test, and train split
