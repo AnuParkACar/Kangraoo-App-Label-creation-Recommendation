@@ -1,5 +1,6 @@
 #import spacy
 import re
+import sys
 #needed for data preproccessing
 #import pandas as pd
 #import numpy as np
@@ -38,7 +39,7 @@ def removeSpace(string:str)->str:
     return re.sub("(?<=,)\s","",string)
 
 #remove stop words, tokenize, and then vectorize the data
-print(createLabels(["In-person only", "Full time", "Hospitality", "Meeting new people", "Service-oriented activities", "Collaborative", "Conflict management", "Detail-oriented", "Friendly / Personable", "Verbal communication", "Written communication", "Organized", "Conflict management"]))
+print(createLabels([sys.argv[2]]))
 
 
 #create the test, and train split
