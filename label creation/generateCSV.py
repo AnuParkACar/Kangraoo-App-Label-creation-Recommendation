@@ -5,7 +5,7 @@ import csv
 
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 labels = ['In-person only', 'Remote only', 'Hybrid', 'No Preference', 'Full time', 'Part time', 'Internship', 'Acting / Performance', 'Analytics / Data', 'Building with hands', 'Design', 'Environment', 'Fashion', 'Food / Wine', 'Health / Wellness', 'Hospitality', 'Learning', 'Math', 'Meeting new people', 'Outdoors', 'Physical', 'Programming', 'Puzzles', 'Reading', 'Real Estate', 'Research', 'Service-oriented activities', 'Social media', 'Spending time with friends', 'Sports', 'Travel', 'Writing', 'Adaptable', 'Collaborative', 'Comfortable with ambiguity', 'Conflict management', 'Creative / Innovative', 'Critical thinking', 'Detail-oriented', 'Discreet', 'Emotionally intelligent', 'Friendly / Personable' ,'Interpersonal skills', 'Leadership', 'Multitasker', 'Organized', 'Persuasion', 'Problem-solving', 'Self-starter', 'Strong communicator', 'Works well under pressure', 'Accounting', 'Acting / Performings', 'Art / Design', 'Beauty', 'Film production', 'Finance', 'Home improvement', 'Management', 'Marketing', 'Multilingual', 'Photography', 'Presentation creation', 'Research', 'Sales', 'Social media', 'Teaching / Training', 'Tech-savvy', 'Verbal communication', 'Written communication']
-
+newInput = [x.lower() for x in labels]
 def getInput():
     key = ""
     usersDict = {}
@@ -13,6 +13,9 @@ def getInput():
     while key != "stop":
         print("Enter text:\n")
         text = input()
+        while text.lower() not in newInput:
+            print("\nNot acceptable label, try again: ")
+            text = input()
         key = text
         if text != "stop":
             labelList = list()
@@ -23,7 +26,7 @@ def getInput():
                 label = input()
                 if labelKey !=  "stop":
                     labelList.append(label)
-                labelKey = key
+                labelKey = label
             usersDict[text] = createLabels(labelList)
         else:
             print("\nStopped")
@@ -31,7 +34,6 @@ def getInput():
     writeToCSV(usersDict)
 
 def createLabels(inputLabel:list[str])->str:
-    newInput = [x.lower() for x in inputLabel]
     binaryList = []
     for label in labels:
         if newInput.count(label.lower()) > 0:
@@ -45,7 +47,7 @@ def removeSpace(string:str)->str:
     return re.sub("(?<=,)\s","",string)
 
 def writeToCSV(userInfo:dict):
-    with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",'w',newline='') as file:
+    with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",'a',newline='') as file:
         for input in list(userInfo.keys()):
             writer = csv.writer(file,delimiter=',')
             writer.writerow([input]+userInfo[input])
