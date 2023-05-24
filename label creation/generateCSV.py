@@ -13,10 +13,6 @@ def getInput():
     while key != "stop":
         print("Enter text:\n")
         text = input()
-        while text.lower() not in newInput:
-            print("\nNot acceptable label, try again: ")
-            text = input()
-        key = text
         if text != "stop":
             labelList = list()
             labelKey = ""
@@ -24,19 +20,23 @@ def getInput():
             while labelKey !=  "stop":
                 print("\nEnter Label: ")
                 label = input()
+                while label.lower() not in newInput and label.lower() != "stop":
+                    print("\nNot acceptable label, try again: ")
+                    label = input()
                 if labelKey !=  "stop":
                     labelList.append(label)
                 labelKey = label
             usersDict[text] = createLabels(labelList)
         else:
             print("\nStopped")
+        key = text
     
     writeToCSV(usersDict)
 
 def createLabels(inputLabel:list[str])->str:
     binaryList = []
     for label in labels:
-        if newInput.count(label.lower()) > 0:
+        if inputLabel.count(label.lower()) > 0:
             binaryList.append(1)
         else:
             binaryList.append(0)
