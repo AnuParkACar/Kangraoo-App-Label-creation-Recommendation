@@ -54,7 +54,7 @@ def removeSpace(string: str) -> str:
 
 
 def writeToCSV(userInfo: dict):
-    with open("C:\\Users\\ashis\\source\\repos\\Anubhav\\iNautical internship\\Kangaroo App\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv", 'a', newline='') as file:
+    with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv", 'a', newline='') as file:
         for input in list(userInfo.keys()):
             writer = csv.writer(file, delimiter=',')
             writer.writerow([input]+userInfo[input])
