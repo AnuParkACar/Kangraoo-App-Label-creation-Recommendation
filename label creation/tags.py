@@ -2,12 +2,22 @@
 import re
 import sys
 #needed for data preproccessing
-#import pandas as pd
+import pandas as pd
+import nlpaug.augmenter.sentence as nas
+import nlpaug.augmenter.word.synonym as naw
 #import numpy as np
 #import matplotlib.pyplot as plt
 #from sklearn.linear_model import LogisticRegression
 #from sklearn.model_selection import train_test_split
 #nlp = spacy.load("en_core_web_sm")
+
+##create more data
+df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
+aug = nas.ContextualWordEmbsForSentenceAug(model_path="distilgpt2")
+#wordAug = naw.SynonymAug(aug_src='wordnet')
+print(aug.augment("I's a hot and windy day here in delaware."))
+#print("\n\n")
+#print(wordAug.augment(df["Transcriptions"].iloc[0]))
 
 
 #class Tags:
