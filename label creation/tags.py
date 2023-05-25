@@ -1,10 +1,9 @@
 #import spacy
-import re
-import sys
 #needed for data preproccessing
 import pandas as pd
-import nlpaug.augmenter.sentence as nas
-import nlpaug.augmenter.word.synonym as naw
+import csv
+import nlpaug.augmenter.word as naw
+import nlpaug.augmenter.sentence.random as nar
 #import numpy as np
 #import matplotlib.pyplot as plt
 #from sklearn.linear_model import LogisticRegression
@@ -13,11 +12,15 @@ import nlpaug.augmenter.word.synonym as naw
 
 ##create more data
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
-aug = nas.ContextualWordEmbsForSentenceAug(model_path="distilgpt2")
-#wordAug = naw.SynonymAug(aug_src='wordnet')
-print(aug.augment("I's a hot and windy day here in delaware."))
-#print("\n\n")
-#print(wordAug.augment(df["Transcriptions"].iloc[0]))
+#aug = nas.ContextualWordEmbsForSentenceAug(model_path="distilgpt2")
+wordAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='insert',aug_p=0.5)
+randomAug = nar.RandomSentAug(mode="left")
+
+with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
+    writer = csv.writer(newFile,delimiter=",")
+    writer.writerow(wordAug.augment(df.iloc[0][0]) + df.iloc[0][1:].values.tolist())
+
+
 
 
 #class Tags:
