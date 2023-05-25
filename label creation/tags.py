@@ -4,6 +4,7 @@ import pandas as pd
 import csv
 import nlpaug.augmenter.word as naw
 import nlpaug.augmenter.sentence.random as nar
+import nlpaug.augmenter.word.back_translation as nab
 #import numpy as np
 #import matplotlib.pyplot as plt
 #from sklearn.linear_model import LogisticRegression
@@ -13,7 +14,11 @@ import nlpaug.augmenter.sentence.random as nar
 ##create more data
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 #aug = nas.ContextualWordEmbsForSentenceAug(model_path="distilgpt2")
-wordAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='substitute',aug_p=0.5)
+subAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='substitute',aug_p=0.5)
+insertAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='insert',aug_p=0.5)
+russianAug = nab.BackTranslationAug(from_model_name='Helsinki-NLP/opus-mt-en-ru',to_model_name='Helsinki-NLP/opus-mt-ru-en')
+germanAug = nab.BackTranslationAug(from_model_name='Helsinki-NLP/opus-mt-en-de',to_model_name='Helsinki-NLP/opus-mt-de-en')
+frenchAug = nab.BackTranslationAug(from_model_name='Helsinki-NLP/opus-mt-en-fr',to_model_name='Helsinki-NLP/opus-mt-fr-en')
 randomAug = nar.RandomSentAug(mode="left")
 
 i = 0
@@ -22,12 +27,14 @@ rows = df.shape[1]
 while i < rows:
     switchedList = randomAug.augment(df.iloc[i][0],n=5)
     for count, value in enumerate(switchedList):
-        subList = wordAug.augment(value,n=5)
-        for text in subList:
-            with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
-                writer = csv.writer(newFile,delimiter=",")
-                writer.writerow(subList + df.iloc[i][1:].values.tolist())
-                newFile.close()
+        with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
+            writer = csv.writer(newFile,delimiter=",")
+            writer.writerow(subAug.augment[value] + df.iloc[i][1:].values.tolist())
+            writer.writerow(insertAug.augment[value] + df.iloc[i][1:].values.tolist())
+            writer.writerow(russianAug.augment[value] + df.iloc[i][1:].values.tolist())
+            writer.writerow(germanAug.augment[value] + df.iloc[i][1:].values.tolist())
+            writer.writerow(frenchAug.augment[value] + df.iloc[i][1:].values.tolist())
+            newFile.close()
     i+=1
 
 
