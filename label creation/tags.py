@@ -13,12 +13,23 @@ import nlpaug.augmenter.sentence.random as nar
 ##create more data
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 #aug = nas.ContextualWordEmbsForSentenceAug(model_path="distilgpt2")
-wordAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='insert',aug_p=0.5)
+wordAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='substitute',aug_p=0.5)
 randomAug = nar.RandomSentAug(mode="left")
 
-with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
-    writer = csv.writer(newFile,delimiter=",")
-    writer.writerow(wordAug.augment(df.iloc[0][0]) + df.iloc[0][1:].values.tolist())
+i = 0
+rows = df.shape[1]
+
+while i < rows:
+    switchedList = randomAug.augment(df.iloc[i][0],n=5)
+    for count, value in enumerate(switchedList):
+        subList = wordAug.augment(value,n=5)
+        for text in subList:
+            with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
+                writer = csv.writer(newFile,delimiter=",")
+                writer.writerow(subList + df.iloc[i][1:].values.tolist())
+                newFile.close()
+    i+=1
+
 
 
 
