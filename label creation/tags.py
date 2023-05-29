@@ -1,11 +1,10 @@
 #import spacy
 #needed for data preproccessing
-from multiprocessing import freeze_support
 import pandas as pd
 import csv
 import nlpaug.augmenter.word as naw
 import nlpaug.augmenter.sentence.random as nar
-import nlpaug.augmenter.word.back_translation as nab
+import nlpaug.augmenter.word.word_embs as wordEmb
 #import numpy as np
 #import matplotlib.pyplot as plt
 #from sklearn.linear_model import LogisticRegression
@@ -15,11 +14,9 @@ import nlpaug.augmenter.word.back_translation as nab
 ##create more data
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 #aug = nas.ContextualWordEmbsForSentenceAug(model_path="distilgpt2")
+wordEmbeddings = wordEmb.WordEmbsAug(model_type="glove")
 subAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='substitute',aug_p=0.5)
 insertAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='insert',aug_p=0.5)
-russianAug = nab.BackTranslationAug(from_model_name='Helsinki-NLP/opus-mt-en-ru',to_model_name='Helsinki-NLP/opus-mt-ru-en')
-germanAug = nab.BackTranslationAug(from_model_name='Helsinki-NLP/opus-mt-en-de',to_model_name='Helsinki-NLP/opus-mt-de-en')
-frenchAug = nab.BackTranslationAug(from_model_name='Helsinki-NLP/opus-mt-en-fr',to_model_name='Helsinki-NLP/opus-mt-fr-en')
 randomAug = nar.RandomSentAug(mode="left")
 
 i = 0
@@ -33,14 +30,10 @@ with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\
         for count, value in enumerate(switchedList):
             sub = subAug.augment(value)
             insert = insertAug.augment(value)
-            #russian = russianAug.augment(value)
-            #german = germanAug.augment(value)
-            #french = frenchAug.augment(value)
+            embedding = wordEmbeddings.augment(value)
             writer.writerow(sub + df.iloc[i][1:].values.tolist())
             writer.writerow(insert + df.iloc[i][1:].values.tolist())
-            #writer.writerow(russian + df.iloc[i][1:].values.tolist())
-            #writer.writerow(german + df.iloc[i][1:].values.tolist())
-            #writer.writerow(french + df.iloc[i][1:].values.tolist())
+            writer.writerow(embedding + df.iloc[i][1:].values.tolist())
         i+=1
     newFile.close()
 
