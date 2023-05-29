@@ -24,4 +24,6 @@ model = tf.keras.Sequential([
 
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),loss="binary_crossentropy",metrics=["accuracy"])
 
-model.fit(x_train,y_train,batch_size=16,epochs=10)
+model.fit(x_train,y_train,batch_size=16,epochs=20)
+
+model.evaluate(x_test,y_test)
