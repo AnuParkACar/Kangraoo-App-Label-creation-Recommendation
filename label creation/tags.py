@@ -14,7 +14,6 @@ import nlpaug.augmenter.word.word_embs as wordEmb
 ##create more data
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 #aug = nas.ContextualWordEmbsForSentenceAug(model_path="distilgpt2")
-wordEmbeddings = wordEmb.WordEmbsAug(model_type="glove")
 subAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='substitute',aug_p=0.5)
 insertAug = naw.ContextualWordEmbsAug(model_path='bert-base-uncased',action='insert',aug_p=0.5)
 randomAug = nar.RandomSentAug(mode="left")
@@ -23,17 +22,15 @@ i = 0
 rows = df.shape[1]
 
 
-with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
+with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="",encoding='utf-8') as newFile:
     writer = csv.writer(newFile,delimiter=",")
-    while i < 2:
+    while i < rows:
         switchedList = randomAug.augment(df.iloc[i][0],n=5)
         for count, value in enumerate(switchedList):
             sub = subAug.augment(value)
             insert = insertAug.augment(value)
-            embedding = wordEmbeddings.augment(value)
             writer.writerow(sub + df.iloc[i][1:].values.tolist())
             writer.writerow(insert + df.iloc[i][1:].values.tolist())
-            writer.writerow(embedding + df.iloc[i][1:].values.tolist())
         i+=1
     newFile.close()
 
