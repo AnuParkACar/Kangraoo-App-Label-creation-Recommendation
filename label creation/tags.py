@@ -1,5 +1,6 @@
 #import spacy
 #needed for data preproccessing
+from multiprocessing import freeze_support
 import pandas as pd
 import csv
 import nlpaug.augmenter.word as naw
@@ -24,21 +25,24 @@ randomAug = nar.RandomSentAug(mode="left")
 i = 0
 rows = df.shape[1]
 
-while i < rows:
-    switchedList = randomAug.augment(df.iloc[i][0],n=5)
-    for count, value in enumerate(switchedList):
-        with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
-            writer = csv.writer(newFile,delimiter=",")
-            writer.writerow(subAug.augment[value] + df.iloc[i][1:].values.tolist())
-            writer.writerow(insertAug.augment[value] + df.iloc[i][1:].values.tolist())
-            writer.writerow(russianAug.augment[value] + df.iloc[i][1:].values.tolist())
-            writer.writerow(germanAug.augment[value] + df.iloc[i][1:].values.tolist())
-            writer.writerow(frenchAug.augment[value] + df.iloc[i][1:].values.tolist())
-            newFile.close()
-    i+=1
 
-
-
+with open("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",mode="a",newline="") as newFile:
+    writer = csv.writer(newFile,delimiter=",")
+    while i < 2:
+        switchedList = randomAug.augment(df.iloc[i][0],n=5)
+        for count, value in enumerate(switchedList):
+            sub = subAug.augment(value)
+            insert = insertAug.augment(value)
+            #russian = russianAug.augment(value)
+            #german = germanAug.augment(value)
+            #french = frenchAug.augment(value)
+            writer.writerow(sub + df.iloc[i][1:].values.tolist())
+            writer.writerow(insert + df.iloc[i][1:].values.tolist())
+            #writer.writerow(russian + df.iloc[i][1:].values.tolist())
+            #writer.writerow(german + df.iloc[i][1:].values.tolist())
+            #writer.writerow(french + df.iloc[i][1:].values.tolist())
+        i+=1
+    newFile.close()
 
 
 #class Tags:
