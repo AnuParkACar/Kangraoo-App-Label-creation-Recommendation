@@ -30,6 +30,9 @@ class VideoToTranscript:
     def print_audio_name(self) -> str:
         return self.audio_file
 
+    def setFileName(self,file_name):
+        self.file_name = file_name
+
     def mp4_to_mp3(self) -> None:
         # take the name only, without the extension ".mp4"
         file_name = os.path.splitext(self.file_name)[0]
