@@ -19,13 +19,15 @@ def recordVideoCallback():
     recorder.release()
     camera.release()
     cv.destroyAllWindows()
+    i = 0
+    while(i < 5):
+        Label(master=rootWindow,text="label:{}".format(i)).pack()
+        i+=1
 
-def stopVideoCallback():
-    #if camera.isOpened() == False:
-        #print("Camera is not running yet")
-    pass
 
 rootWindow.geometry(newGeometry="700x700")
-recordVideo = Button(master=rootWindow,command=recordVideoCallback,text="record").pack()
-stopVideo = Button(master=rootWindow,command=stopVideoCallback,text="stop").pack()
+recordVideo = Button(master=rootWindow,command=recordVideoCallback,text="Record and Generate Labels").pack()
+
+
+
 rootWindow.mainloop()

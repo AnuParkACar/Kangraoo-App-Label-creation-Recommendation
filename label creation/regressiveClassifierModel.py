@@ -25,3 +25,4 @@ prediction = classifier.predict(x_test)
 print(prediction.toarray())
 print("\nAccuracy: " + str(accuracy_score(y_test,prediction.toarray())))
 print("\nLoss: " + str(hamming_loss(y_test,prediction.toarray())))
+
