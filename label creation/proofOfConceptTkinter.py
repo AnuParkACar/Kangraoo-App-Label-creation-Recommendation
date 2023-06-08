@@ -8,6 +8,7 @@ import ffmpeg
 
 rootWindow = Tk()
 rootWindow.title("KangarooStar App - Label Generation Demo")
+rootWindow.maxsize(width=600,height=600)
 
 
 def generateTranscript(filePath : str):
@@ -28,7 +29,7 @@ def recordVideoCallback():
     recorder = cv.VideoWriter(fileName,focc,30.0,(640,480))
     finalOutput = "finalOutput.mp4"
     
-    chunks = 1024
+    chunks = 1300
     format = pyaudio.paInt16
     numSeconds = 200
     rate = 44100
@@ -55,8 +56,8 @@ def recordVideoCallback():
     cv.destroyAllWindows()
     pa.terminate()
 
-    wf = wave.open(waveOuputFileName,'wb')
-    wf.setnframes(channels)
+    wf = wave.open(os.path.join(os.getcwd(),waveOuputFileName),'wb')
+    wf.setnchannels(channels)
     wf.setframerate(rate)
     wf.setsampwidth(pa.get_sample_size(format))
     wf.writeframes(b"".join(frames))
@@ -64,7 +65,7 @@ def recordVideoCallback():
 
     inputVid = ffmpeg.input(fileName)
     inputAudio = ffmpeg.input(waveOuputFileName)
-    ffmpeg.concat(inputVid,inputAudio,v=1,a=1).output(finalOutput)
+    ffmpeg.concat(inputVid,inputAudio,v=1,a=1).output(os.path.join(os.getcwd(),finalOutput)).run()
 
     generateTranscript(os.path.join(os.getcwd(),finalOutput))
 
