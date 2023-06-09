@@ -8,7 +8,6 @@ import ffmpeg
 
 rootWindow = Tk()
 rootWindow.title("KangarooStar App - Label Generation Demo")
-rootWindow.maxsize(width=600,height=600)
 
 
 def generateTranscript(filePath : str):
