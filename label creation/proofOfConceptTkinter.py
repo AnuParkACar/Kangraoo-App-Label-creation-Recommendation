@@ -5,10 +5,16 @@ from videoToTranscript import VideoToTranscript
 import os
 import wave
 import ffmpeg
+from regressiveClassifierModel import Classifier
 
 rootWindow = Tk()
 rootWindow.title("KangarooStar App - Label Generation Demo")
+mainFrame = Frame(master=rootWindow).grid()
 
+def generateLabels(transcript:str)->str:
+    classify = Classifier()
+    prediction = Classifier.predict(transcript)
+    return prediction
 
 def generateTranscript(filePath : str):
     vt = VideoToTranscript("fakeLink")
@@ -16,8 +22,12 @@ def generateTranscript(filePath : str):
     vt.mp4_to_mp3()
     vt.mp3_to_text()
     transcript = vt.get_transcript()
-    Label(master=rootWindow,text="Transcript:\n").grid(row=1,column=3)
-    Label(master=rootWindow,text=transcript).grid(row=2,column=3)
+    Label(master=mainFrame,text="Generating transcript:\n").grid(row=4,column=3)
+    Label(master=mainFrame,text=transcript).grid(row=5,column=3)
+    Label(master=mainFrame,text="Generating Labels").grid(row=6,column=3)
+
+    tags = generateLabels(transcript)
+    Label(master=mainFrame,text=tags).grid(row=7,column=3)
 
 
 def recordVideoCallback():
@@ -48,6 +58,8 @@ def recordVideoCallback():
         if cv.waitKey(1) == ord('q'):
             break
     
+    Label(master=mainFrame,text="Saving Video...").grid(row=1,column=3)
+    Label(master=mainFrame,text="Saving Audio...").grid(row=2,column=3)
     stream.stop_stream()
     stream.close()
     recorder.release()
@@ -55,6 +67,8 @@ def recordVideoCallback():
     cv.destroyAllWindows()
     pa.terminate()
 
+
+    Label(master=mainFrame,text="Merging Audio and Video...").grid(row=3,column=3)
     wf = wave.open(os.path.join(os.getcwd(),waveOuputFileName),'wb')
     wf.setnchannels(channels)
     wf.setframerate(rate)
@@ -71,7 +85,7 @@ def recordVideoCallback():
 
 
 rootWindow.geometry(newGeometry="700x700")
-recordVideo = Button(master=rootWindow,command=recordVideoCallback,text="Record and Generate Labels").grid(row=0,column=3)
+recordVideo = Button(master=mainFrame,command=recordVideoCallback,text="Record and Generate Labels").grid(row=0,column=3)
 
 
 

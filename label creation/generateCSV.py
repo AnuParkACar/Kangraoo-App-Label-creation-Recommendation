@@ -61,7 +61,7 @@ def writeToCSV(userInfo: dict):
         file.close()
 
 
-class generateLabels:
+class GenerateLabels:
     def generateListOfLabels(self,binaryDataList:list):
         labelList = list()
         for i,label in enumerate(binaryDataList):

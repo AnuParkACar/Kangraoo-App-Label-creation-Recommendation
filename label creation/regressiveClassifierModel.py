@@ -6,7 +6,7 @@ import sklearn.model_selection as modelSelection
 import neattext.functions as nfx
 from skmultilearn.problem_transform import ClassifierChain
 from sklearn.svm import SVC
-from generateCSV import generateLabels
+from generateCSV import GenerateLabels
 
 class Classifier:
     def __init__(self) -> None:
@@ -33,10 +33,8 @@ class Classifier:
     def predict(self,transcript:str)->str:
         textVector = self.fittedVectorizer.transform([transcript]).toarray()
 
-        labels = generateLabels()
+        labels = GenerateLabels()
         predictedLabels = self.classifier.predict(textVector).toarray()
         ok = predictedLabels[0].tolist()
-        return str(labels.generateListOfLabels(ok))
+        return (labels.generateListOfLabels(ok))
     
-cl = Classifier()
-print(cl.predict("Hi, I'm Danielle, the HR manager at Nebula Fashion House. We're looking for a passionate and creative fashion designer to join our innovative team. This is a full-time, in-person role based in our vibrant New York studio. The ideal candidate should have an eye for aesthetics, be comfortable with ambiguity as trends are ever-changing, and should have excellent interpersonal skills to effectively communicate with our team and clients. A background in Art and Design will be highly advantageous for this role"))
