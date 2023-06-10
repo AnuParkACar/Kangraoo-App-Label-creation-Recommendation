@@ -19,7 +19,7 @@ featureTransformer = dataPreprocessing.TfidfVectorizer()
 fittedVectorizer = featureTransformer.fit(featureText)
 #features = featureTransformer.fit_transform(featureText).toarray()
 features = fittedVectorizer.transform(featureText).toarray()
-outputs = df[df.columns[1:]].values
+outputs = df[df.columns[1:].tolist()].values
 
 
 x_train,x_test,y_train,y_test = modelSelection.train_test_split(features,outputs,test_size=0.2,)
@@ -44,4 +44,5 @@ textVector = fittedVectorizer.transform(["Hi, I'm Danielle, the HR manager at Ne
 
 labels = generateLabels()
 predictedLabels = classifier.predict(textVector).toarray()
-print(labels.generateListOfLabels(predictedLabels[0]))
+ok = predictedLabels[0].tolist()
+print(labels.generateListOfLabels(ok))

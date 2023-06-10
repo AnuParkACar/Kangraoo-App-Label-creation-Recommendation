@@ -62,7 +62,7 @@ def writeToCSV(userInfo: dict):
 
 
 class generateLabels:
-    def generateListOfLabels(binaryDataList:list):
+    def generateListOfLabels(self,binaryDataList:list):
         labelList = list()
         for i,label in enumerate(binaryDataList):
             if label == 1:
