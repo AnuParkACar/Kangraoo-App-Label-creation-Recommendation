@@ -13,7 +13,7 @@ mainFrame = Frame(master=rootWindow).grid()
 
 def generateLabels(transcript:str)->str:
     classify = Classifier()
-    prediction = Classifier.predict(transcript)
+    prediction = classify.predict(transcript)
     return prediction
 
 def generateTranscript(filePath : str):
