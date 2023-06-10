@@ -61,16 +61,17 @@ def writeToCSV(userInfo: dict):
         file.close()
 
 
-def generateListOfLabels(binaryDataList:list):
-    labelList = list()
-    for i,label in enumerate(binaryDataList):
-        if label == 1:
-            labelList.append(newInput[i])
-    return labelList
+class generateLabels:
+    def generateListOfLabels(binaryDataList:list):
+        labelList = list()
+        for i,label in enumerate(binaryDataList):
+            if label == 1:
+                labelList.append(newInput[i])
+        return labelList
 
 
 #print(generateListOfLabels([1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1]))
-getInput()
+#getInput()
 
 #107
 #100
