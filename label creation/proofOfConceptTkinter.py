@@ -23,8 +23,8 @@ def generateTranscript(filePath : str):
     vt.mp3_to_text()
     transcript = vt.get_transcript()
     Label(master=mainFrame,text="Generating transcript:\n").grid(row=4,column=3)
-    Label(master=mainFrame,text=transcript).grid(row=5,column=3)
-    Label(master=mainFrame,text="Generating Labels").grid(row=6,column=3)
+    Label(master=mainFrame,text=transcript,wraplength=500).grid(row=5,column=3)
+    Label(master=mainFrame,text="Generating Labels",).grid(row=6,column=3)
 
     tags = generateLabels(transcript)
     Label(master=mainFrame,text=tags).grid(row=7,column=3)
