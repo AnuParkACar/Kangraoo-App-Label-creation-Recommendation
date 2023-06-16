@@ -57,6 +57,7 @@ def get_location(transcript: str) -> str:
 def generateLabels(transcript: str) -> str:
     classify = Classifier()
     prediction = classify.predict(transcript)
+    # call get_location, will return the desired location label tag
     return prediction
 
 
