@@ -2,6 +2,7 @@ from tkinter import *
 import pyaudio
 import cv2 as cv
 from videoToTranscript import VideoToTranscript
+from fineTunedBert import Bert
 import os
 import wave
 import ffmpeg
@@ -56,8 +57,8 @@ def get_location(transcript: str) -> str:
 
 
 def generateLabels(transcript: str) -> str:
-    classify = Classifier()
-    prediction = classify.predict(transcript)
+    classifier = Bert()
+    prediction = classifier.evaluate(path="C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-star-App-Label-creation-Recommendation\\bert_weights",input=transcript)
     # call get_location, will return the desired location label tag
     return prediction
 
