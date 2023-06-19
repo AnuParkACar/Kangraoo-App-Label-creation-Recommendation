@@ -103,6 +103,10 @@ class Bert:
     def saveState(self,directory):
         self.model.saveWeights(directory)
 
+    def evaluate(self,path,input):
+        outputs = self.tokenizer(input,return_tensors="pt",padding=True,add_special_tokens=True)
+        self.model = BertModel.from_pretrained(path)
+
 class innerBertClassification(nn.Module):
     def __init__(self,num_labels):
         super(innerBertClassification, self).__init__()
