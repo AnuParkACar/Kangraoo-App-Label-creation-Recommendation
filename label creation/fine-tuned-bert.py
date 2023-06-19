@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from generateCSV import GenerateLabels
 
-df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
+df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-star-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 df = df.sample(frac=1).reset_index(drop=True) #shuffle data
 
 class Bert:
@@ -82,7 +82,7 @@ class Bert:
                     j+=len(self.inputs) - j
             
             if self.validateAndSave():
-                self.saveState("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\bert_weights")
+                self.saveState("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-star-App-Label-creation-Recommendation\\bert_weights")
             else:
                 break
             
@@ -164,9 +164,3 @@ class innerBertClassification(nn.Module):
         """
         self.model.save_pretrained(directory)
     
-
-ok = Bert()
-#ok.createTrainingData()
-#ok.train()
-
-print(ok.evaluate(path="C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\bert_weights",input="Hi there! I'm Olivia Sander, an enthusiastic team player who has a passion for fitness and wellness. As a certified personal trainer, I'm keen on promoting health awareness and maintaining my clients' fitness levels. I believe in living an active lifestyle, frequently indulging in outdoor activities like hiking and sports. I love socializing and getting to know my clients personally to better help them achieve their goals. Currently, I'm searching for a hybrid role that would allow me to interact with my clients both online and in-person."))

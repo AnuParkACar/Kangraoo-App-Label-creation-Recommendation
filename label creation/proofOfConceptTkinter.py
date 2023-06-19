@@ -10,6 +10,7 @@ import spacy
 from transformers import AutoTokenizer, BertForQuestionAnswering
 import torch
 
+
 rootWindow = Tk()
 rootWindow.title("KangarooStar App - Label Generation Demo")
 mainFrame = Frame(master=rootWindow).grid()
