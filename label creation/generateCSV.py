@@ -62,10 +62,14 @@ def writeToCSV(userInfo: dict):
 
 
 class GenerateLabels:
-    def generateListOfLabels(self,binaryDataList:list):
+    def generateListOfLabels(self,dataList:list,confidence_level:int)->list:
+        """
+        Inputs a list that has values between 0 and 1, and returns correspoding labels based on confidence_level.\n
+        Returns 
+        """
         labelList = list()
-        for i,label in enumerate(binaryDataList):
-            if label == 1:
+        for i,label in enumerate(dataList):
+            if label >= confidence_level:
                 labelList.append(newInput[i])
         return labelList
 

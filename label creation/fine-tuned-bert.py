@@ -3,7 +3,9 @@ from transformers import BertModel, BertConfig
 import pandas as pd
 import torch as pt
 import random
-import torch.nn as nn   
+import torch.nn as nn
+import torch.nn.functional as F
+from generateCSV import GenerateLabels
 
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 df = df.sample(frac=1).reset_index(drop=True) #shuffle data
@@ -85,6 +87,11 @@ class Bert:
                 break
             
     def validateAndSave(self) -> bool:
+        """
+        Checks if the loss on the validation set from the current weights is less than the last epoch.\n
+        Saves model if true, and if not true, signals.\n
+        Returns: True if saved state, False if performance decreases
+        """
         self.model.eval()
         inputs = self.validationSet[0]
         attention_masks = self.validationSet[1]
@@ -101,11 +108,24 @@ class Bert:
             return False
 
     def saveState(self,directory):
+        """
+        Calls innerBertClassification.saveWeights() to save the current state of model
+        """
         self.model.saveWeights(directory)
 
-    def evaluate(self,path,input):
-        outputs = self.tokenizer(input,return_tensors="pt",padding=True,add_special_tokens=True)
+    def evaluate(self,path:str,input:str):
+        enoding = self.tokenizer([input],return_tensors="pt",padding=True,add_special_tokens=True)
         self.model = BertModel.from_pretrained(path)
+        self.model.eval()
+        outputs = self.model(input_ids=enoding["input_ids"],attention_mask = enoding["attention_mask"])
+        predictions = F.sigmoid(outputs)
+        predictions = predictions.tolist()
+        labelGenerator = GenerateLabels()
+        predictedLabels = labelGenerator.generateListOfLabels(dataList=predictions,confidence_level=0.6)
+        return predictedLabels
+
+
+        
 
 class innerBertClassification(nn.Module):
     def __init__(self,num_labels):
@@ -130,9 +150,14 @@ class innerBertClassification(nn.Module):
             return logits
         
     def saveWeights(self,directory):
+        """
+        Acts as wrapper for BertModel.save_pretrained()
+        """
         self.model.save_pretrained(directory)
     
 
 ok = Bert()
-ok.createTrainingData()
-ok.train()
+#ok.createTrainingData()
+#ok.train()
+
+print(ok.evaluate(path="C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\bert_weights",input="Hi there! I'm Olivia Sander, an enthusiastic team player who has a passion for fitness and wellness. As a certified personal trainer, I'm keen on promoting health awareness and maintaining my clients' fitness levels. I believe in living an active lifestyle, frequently indulging in outdoor activities like hiking and sports. I love socializing and getting to know my clients personally to better help them achieve their goals. Currently, I'm searching for a hybrid role that would allow me to interact with my clients both online and in-person."))
