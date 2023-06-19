@@ -70,12 +70,6 @@ class Bert:
                     inputs = self.features[0][j : (j + batch_size),:]
                     attention_masks = self.features[1][j : (j + batch_size),:]
                     labels = self.features[2][j : (j + batch_size),:]
-                    combined = list(zip(inputs,attention_masks,labels))
-                    random.shuffle(combined) #combined the lists to shuffle them in parallel
-                    inputs, attention_masks, labels = zip(*combined)
-                    inputs = pt.tensor(list(inputs)).float()
-                    attention_masks = pt.tensor(list(attention_masks)).float()
-                    labels = pt.tensor(list(labels)).float()
                     self.gradientDescent(inputs,attention_masks,labels)
                     j+=batch_size + 1
                 else:
@@ -94,13 +88,14 @@ class Bert:
         self.model.eval()
         inputs = self.validationSet[0]
         attention_masks = self.validationSet[1]
-        labels = self.validationSet[2]
+        labels = self.validationSet[2].float()
         outputs = self.model(input_ids=inputs,attention_mask=attention_masks,labels=labels)
         loss = outputs['loss']
 
         current_loss = loss.item()
         if current_loss <= self.performanceLoss:
             self.performanceLoss = current_loss
+            print("Loss: {}".format(self.performanceLoss))
             return True
         else:
             return False
