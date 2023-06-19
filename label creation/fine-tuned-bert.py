@@ -115,13 +115,14 @@ class Bert:
 
     def evaluate(self,path:str,input:str):
         enoding = self.tokenizer([input],return_tensors="pt",padding=True,add_special_tokens=True)
-        self.model = BertModel.from_pretrained(path)
-        self.model.eval()
-        outputs = self.model(input_ids=enoding["input_ids"],attention_mask = enoding["attention_mask"])
-        predictions = F.sigmoid(outputs)
+        self.model.model = BertModel.from_pretrained(path)
+        self.model.model.eval()
+        outputs = self.model.model(input_ids=enoding["input_ids"],attention_mask = enoding["attention_mask"])
+        logits = self.model.applyFinalLayer(outputs)
+        predictions = F.sigmoid(logits)
         predictions = predictions.tolist()
         labelGenerator = GenerateLabels()
-        predictedLabels = labelGenerator.generateListOfLabels(dataList=predictions,confidence_level=0.6)
+        predictedLabels = labelGenerator.generateListOfLabels(dataList=predictions[0],confidence_level=0.65)
         return predictedLabels
 
 
@@ -138,9 +139,7 @@ class innerBertClassification(nn.Module):
 
     def forward(self,input_ids,attention_mask,labels=None):
         outputs = self.model(input_ids=input_ids,attention_mask = attention_mask)
-        self.poolerOutput = outputs.pooler_output
-        self.pooledOutput = self.dropout(self.poolerOutput)
-        logits = self.classification(self.pooledOutput)
+        logits = self.applyFinalLayer(outputs)
 
         if labels is not None:
             lossFunction = nn.BCEWithLogitsLoss()
@@ -148,6 +147,16 @@ class innerBertClassification(nn.Module):
             return {'loss': loss}
         else:
             return logits
+        
+    def applyFinalLayer(self,outputs):
+        """
+        Takes in a BaseModelOutputWithPoolingAndCrossAttentions object, and returns the logits.\n
+        Applies dropout and final layer
+        """
+        poolerOutput = outputs.pooler_output
+        pooledOutput = self.dropout(poolerOutput)
+        logits = self.classification(pooledOutput)
+        return logits
         
     def saveWeights(self,directory):
         """
