@@ -49,6 +49,7 @@ class Bert:
         """
         Go over the batch, and update the parameters using gradient descent
         """
+        labels = labels.float()
         self.optimizer = pt.optim.Adam(self.model.parameters(),lr=0.00005)
         self.optimizer.zero_grad()
         outputs = self.model(input_ids=inputs,attention_mask=attention_masks,labels=labels)
