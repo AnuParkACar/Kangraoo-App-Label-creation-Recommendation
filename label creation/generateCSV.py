@@ -3,7 +3,7 @@ import numpy as np
 import re
 import csv
 
-df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding='utf-8')
+df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-star-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding='utf-8')
 labels = ['In-person only', 'Remote only', 'Hybrid', 'No Preference', 'Full time', 'Part time', 'Internship', 'Acting / Performance', 'Analytics / Data', 'Building with hands', 'Design', 'Environment', 'Fashion', 'Food / Wine', 'Health / Wellness', 'Hospitality', 'Learning', 'Math', 'Meeting new people', 'Outdoors', 'Physical', 'Programming', 'Puzzles', 'Reading', 'Real Estate', 'Research', 'Service-oriented activities', 'Social media', 'Spending time with friends', 'Sports', 'Travel', 'Writing', 'Adaptable', 'Collaborative', 'Comfortable with ambiguity', 'Conflict management', 'Creative / Innovative',
           'Critical thinking', 'Detail-oriented', 'Discreet', 'Emotionally intelligent', 'Friendly / Personable', 'Interpersonal skills', 'Leadership', 'Multitasker', 'Organized', 'Persuasion', 'Problem-solving', 'Self-starter', 'Strong communicator', 'Works well under pressure', 'Accounting', 'Acting / Performings', 'Art / Design', 'Beauty', 'Film production', 'Finance', 'Home improvement', 'Management', 'Marketing', 'Multilingual', 'Photography', 'Presentation creation', 'Research', 'Sales', 'Social media', 'Teaching / Training', 'Tech-savvy', 'Verbal communication', 'Written communication']
 newInput = [x.lower() for x in labels]
@@ -62,10 +62,14 @@ def writeToCSV(userInfo: dict):
 
 
 class GenerateLabels:
-    def generateListOfLabels(self,binaryDataList:list):
+    def generateListOfLabels(self,dataList:list,confidence_level:int)->list:
+        """
+        Inputs a list that has values between 0 and 1, and returns correspoding labels based on confidence_level.\n
+        Returns 
+        """
         labelList = list()
-        for i,label in enumerate(binaryDataList):
-            if label == 1:
+        for i,label in enumerate(dataList):
+            if label >= confidence_level:
                 labelList.append(newInput[i])
         return labelList
 

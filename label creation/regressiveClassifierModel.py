@@ -12,7 +12,7 @@ from generateCSV import GenerateLabels
 class Classifier:
     def __init__(self) -> None:
 
-        df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-App-Label-creation-Recommendation\\transcript_data\\data.csv", delimiter=",", encoding="utf-8")
+        df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-star-App-Label-creation-Recommendation\\transcript_data\\data.csv", delimiter=",", encoding="utf-8")
 
         featureText = df["Transcriptions"].apply(
             nfx.remove_stopwords, nfx.remove_non_ascii)
