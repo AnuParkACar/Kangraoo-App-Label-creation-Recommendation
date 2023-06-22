@@ -6,6 +6,7 @@ import random
 import torch.nn as nn
 import torch.nn.functional as F
 from generateCSV import GenerateLabels
+from sklearn.model_selection import train_test_split
 
 df = pd.read_csv("C:\\Users\\abhin\\OneDrive\\Desktop\\Computing\\Nautical-Internship\\dataPreProcessing\\Kangraoo-star-App-Label-creation-Recommendation\\transcript_data\\data.csv",delimiter=",",encoding="utf-8")
 df = df.sample(frac=1).reset_index(drop=True) #shuffle data
