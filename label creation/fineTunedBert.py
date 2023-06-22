@@ -19,34 +19,37 @@ class Bert:
         Luckily, the labels are already in one-hot encoding so that shouldn't be that hard
         """
         self.performanceLoss = float('inf')
-        self.trainingSize = 0.8
+        self.num_training_set=0.9
+        self.testSize = 0.1
         self.num_labels = len(df.columns)-1
         self.model = innerBertClassification(num_labels=self.num_labels)
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.inputs = df[df.columns[0]].tolist()
         self.validationSet = list()
-        self.features = list()
+        #self.features = list()
         
     
     def createTrainingData(self):
         """
-        Loads the input_ids and the attention_masks for the training and the validation set. 
+        Split the data into a training set and a validation set and also encodes the validation data
         """
-        encoding = self.tokenizer(self.inputs,return_tensors="pt",padding=True,add_special_tokens=True)
-        num_training_set = int(len(self.inputs)  * self.trainingSize)
-        self.features.append(encoding["input_ids"][:num_training_set])
-        self.features.append(encoding["attention_mask"][:num_training_set])
-        self.features.append(pt.LongTensor(df.iloc[:,1:].values.tolist())[:num_training_set])
-        self.validationSet.append(encoding["input_ids"][num_training_set:])
-        self.validationSet.append(encoding["attention_mask"][num_training_set:])
-        self.validationSet.append(pt.LongTensor(df.iloc[:,1:].values.tolist())[num_training_set:])
+        self.train_features,self.validation_features,self.train_labels,self.validation_labels = train_test_split(self.inputs,df.iloc[:,1:].values.tolist(),test_size=self.testSize)
+
+        encoding = self.tokenizer(self.validation_features,return_tensors="pt",padding=True,add_special_tokens=True)
+        #num_training_set = int(len(self.inputs)  * self.trainingSize)
+        #self.features.append(encoding["input_ids"][:num_training_set])
+        #self.features.append(encoding["attention_mask"][:num_training_set])
+        #self.features.append(pt.LongTensor(df.iloc[:,1:].values.tolist())[:num_training_set])
+        self.validationSet.append(encoding["input_ids"])
+        self.validationSet.append(encoding["attention_mask"])
+        self.validationSet.append(pt.tensor(data=self.validation_labels,dtype=pt.float))
         print("ok")
     
     def gradientDescent(self,inputs,attention_masks,labels):
         """
         Go over the batch, and update the parameters using gradient descent
         """
-        labels = labels.float()
+        #labels = labels.float()
         self.optimizer = pt.optim.Adam(self.model.parameters(),lr=0.00005)
         self.optimizer.zero_grad()
         outputs = self.model(input_ids=inputs,attention_mask=attention_masks,labels=labels)
@@ -70,16 +73,27 @@ class Bert:
             j = 0
             while (j + batch_size + 1)< len(self.inputs):
                 if j + batch_size + 1 <= len(self.inputs):
-                    inputs = self.features[0][j : (j + batch_size),:]
-                    attention_masks = self.features[1][j : (j + batch_size),:]
-                    labels = self.features[2][j : (j + batch_size),:]
-                    self.gradientDescent(inputs,attention_masks,labels)
+
+                    encoding = self.tokenizer(self.train_features[j : (j + batch_size)],return_tensors="pt",padding=True,add_special_tokens=True)
+                    labels = pt.tensor(data=self.train_labels[j : (j + batch_size)],dtype=pt.float)
+                    self.gradientDescent(inputs=encoding['input_ids'],attention_masks=encoding['attention_mask'],labels=labels)
+
+                    #inputs = self.features[0][j : (j + batch_size),:]
+                    #attention_masks = self.features[1][j : (j + batch_size),:]
+                    #labels = self.features[2][j : (j + batch_size),:]
+                    #self.gradientDescent(inputs,attention_masks,labels)
                     j+=batch_size + 1
                 else:
-                    inputs = self.features[0][j : (j+ (len(self.inputs) - j)),:]
-                    attention_masks = self.features[1][j : (j+ (len(self.inputs) - j)),:]
-                    labels = self.features[2][j : (j+ (len(self.inputs) - j)),:]
-                    self.gradientDescent(inputs,attention_masks,labels)
+
+
+                    encoding = self.tokenizer(self.train_features[j : (j+ (len(self.inputs) - j))],return_tensors="pt",padding=True,add_special_tokens=True)
+                    labels = pt.tensor(data=self.train_labels[j : (j+ (len(self.inputs) - j))],dtype=pt.float)
+                    self.gradientDescent(inputs=encoding['input_ids'],attention_masks=encoding['attention_mask'],labels=labels)
+
+                    #inputs = self.features[0][j : (j+ (len(self.inputs) - j)),:]
+                    #attention_masks = self.features[1][j : (j+ (len(self.inputs) - j)),:]
+                    #labels = self.features[2][j : (j+ (len(self.inputs) - j)),:]
+                    #self.gradientDescent(inputs,attention_masks,labels)
                     j+=len(self.inputs) - j
             
             if self.validateAndSave():
@@ -96,7 +110,7 @@ class Bert:
         self.model.eval()
         inputs = self.validationSet[0]
         attention_masks = self.validationSet[1]
-        labels = self.validationSet[2].float()
+        labels = self.validationSet[2]
         outputs = self.model(input_ids=inputs,attention_mask=attention_masks,labels=labels)
         loss = outputs['loss']
 
@@ -170,3 +184,6 @@ class innerBertClassification(nn.Module):
         """
         self.model.save_pretrained(directory)
     
+ok = Bert()
+ok.createTrainingData()
+#ok.train()
