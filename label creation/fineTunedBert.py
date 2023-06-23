@@ -188,6 +188,6 @@ class innerBertClassification(nn.Module):
         """
         self.model.save_pretrained(directory)
     
-ok = Bert()
-ok.createTrainingData()
+#ok = Bert()
+#ok.createTrainingData()
 #ok.train()
