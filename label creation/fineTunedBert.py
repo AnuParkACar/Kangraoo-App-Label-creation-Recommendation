@@ -145,7 +145,11 @@ class Bert:
         predictedLabels = labelGenerator.generateListOfLabels(dataList=predictions[0],confidence_level=0.65)
         return predictedLabels
 
-
+    def setPretrainedWeights(self,path):
+        """
+        Set the weights to be the ones that were saved
+        """
+        self.model.model = BertModel.from_pretrained(path)
         
 
 class innerBertClassification(nn.Module):
